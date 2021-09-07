@@ -1,0 +1,25 @@
+channels:
+  - defaults
+  - conda-forge
+dependencies:
+  - python
+  - nodejs=16.6
+  - ipywidgets
+  - git=2.23
+  - jupyterlab-git=0.32
+  - jupyterlab=3.1
+  - jupyter-resource-usage=0.6
+  - jupyterlab-topbar=0.6
+  - nbconvert
+  - notebook
+  - jupyter-server-proxy
+  - dask-core
+  - distributed
+  - dask-labextension
+  - yarl
+  - pyviz_comms
+  - black
+  - isort
+  - tornado
+  - nbdime
+  - voila

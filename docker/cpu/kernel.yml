@@ -1,0 +1,33 @@
+gname: neur_data_ann
+channels:
+  - defaults
+  - bioconda
+  - conda-forge
+dependencies:
+  - python=3.9
+  - nodejs=16.6
+  - git=2.23
+  - r-base=4.1
+  - r-essentials=4.1
+  - r-biocmanager=1.30
+  - r-devtools=2.4
+  - r-signac=1.3
+  - r-rgl=0.107
+  - r-cairo=1.5_12
+  - bioconductor-rtracklayer
+  - r-hdf5r
+  - bioconductor-scater
+  - bioconductor-scran
+  - rpy2=3.4.5
+  - h5py=3.2
+  - pytables=3.6
+  - llvmlite=0.36
+  - numba=0.53
+  - louvain=0.7
+  - pip=21.2
+  - pip:
+    - scanpy==1.7.2
+    - leidenalg==0.8.7
+    - pandas==1.2.5
+    - anndata2ri==1.0.6
+    - scrublet==0.2.3
