@@ -85,4 +85,3 @@ RUN mamba env update -n saturn --file /tmp/kernel.yml && \
     find ${CONDA_DIR} -type f,l -name '*.a' -delete && \
     find ${CONDA_DIR} -type f,l -name '*.js.map' -delete
 RUN echo '' > ${CONDA_DIR}/envs/saturn/conda-meta/history
-RUN ${CONDA_DIR}/envs/saturn/bin/Rscript -e 'install.packages(c("IRkernel", "tidyverse", "anndata", "lmds", "FNN"), repos = "https://cran.rstudio.com")'
