@@ -1,12 +1,8 @@
-FROM continuumio/miniconda3:4.9.2
+FROM nvidia/cuda:11.1.1-runtime-ubuntu18.04
 EXPOSE 8888
 
-RUN ln -s /opt/conda /srv/conda
-ENV APP_BASE=/srv
-ENV CONDA_DIR=/srv/conda
-ENV CONDA_BIN=${CONDA_DIR}/bin
 ENV DEBIAN_FRONTEND=noninteractive
-RUN mkdir /usr/share/man/man1
+
 RUN apt-get -qq --allow-releaseinfo-change update && \
     apt-get -qq upgrade -y && \
     apt-get install --yes --no-install-recommends \
@@ -24,14 +20,15 @@ RUN apt-get -qq --allow-releaseinfo-change update && \
         openssh-server \
         htop \
         screen \
-	vim \
-	emacs-nox \
+    	vim \
+	    emacs-nox \
         default-jre \
+        build-essential \
+        gcc-multilib \
      > /dev/null && \
     apt-get -qq purge && \
     apt-get -qq clean && \
     rm -rf /var/lib/apt/lists/* && \
-    conda update -y conda && \
     mkdir -p /run/sshd && \
     chmod 755 /run/sshd && \
     echo "en_US.UTF-8 UTF-8" > /etc/locale.gen && \
@@ -44,6 +41,10 @@ ENV NB_USER=jovyan
 ENV NB_UID=1000
 ENV USER=${NB_USER}
 ENV HOME=/home/${NB_USER}
+ENV APP_BASE=/srv
+ENV CONDA_DIR=/srv/conda
+ENV CONDA_BIN=${CONDA_DIR}/bin
+
 
 RUN adduser --disabled-password \
     --gecos "Default user" \
@@ -51,11 +52,15 @@ RUN adduser --disabled-password \
     ${NB_USER} && \
     echo "$NB_USER ALL=(ALL) NOPASSWD:ALL" > /etc/sudoers.d/notebook && \
     mkdir -p ${APP_BASE} && \
-    chown 1000:1000 -R /opt/conda && \
     chown -R $NB_USER:$NB_USER ${APP_BASE}
+
 COPY profile /etc/profile
 
 USER ${NB_USER}
+
+COPY install-miniconda.bash /tmp/install-miniconda.bash
+RUN bash /tmp/install-miniconda.bash
+
 
 COPY install-jupyter.bash /tmp/install-jupyter.bash
 COPY environment.yml /tmp/environment.yml
@@ -80,4 +85,3 @@ RUN mamba env update -n saturn --file /tmp/kernel.yml && \
     find ${CONDA_DIR} -type f,l -name '*.a' -delete && \
     find ${CONDA_DIR} -type f,l -name '*.js.map' -delete
 RUN echo '' > ${CONDA_DIR}/envs/saturn/conda-meta/history
-RUN ${CONDA_DIR}/envs/saturn/bin/Rscript -e 'install.packages(c("IRkernel", "tidyverse", "anndata", "lmds", "FNN"), repos = "https://cran.rstudio.com")'
